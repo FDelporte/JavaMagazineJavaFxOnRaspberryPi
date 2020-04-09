@@ -17,6 +17,7 @@ public class DashboardScreen extends HBox {
     /**
      * Constructor.
      */
+    @SuppressWarnings("unchecked")
     public DashboardScreen(GpioHelper gpioHelper) {
         // Get the Java version info
         final String javaVersion = System.getProperty("java.version");
