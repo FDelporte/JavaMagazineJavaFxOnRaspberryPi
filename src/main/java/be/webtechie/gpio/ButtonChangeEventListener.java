@@ -2,8 +2,8 @@ package be.webtechie.gpio;
 
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import javafx.scene.chart.XYChart;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +32,7 @@ public class ButtonChangeEventListener implements GpioPinListenerDigital {
      */
     @Override
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-        var timeStamp = new SimpleDateFormat("HH.mm.ss").format(new Date());
+        var timeStamp = LocalTime.now().format(DateTimeFormatter.ofPattern("HH.mm.ss"));
         this.data.getData().add(new XYChart.Data<>(timeStamp, event.getState().isHigh() ? 1 : 0));
 
         logger.info("Button state changed to {}", event.getState().isHigh() ? "high" : "low");
