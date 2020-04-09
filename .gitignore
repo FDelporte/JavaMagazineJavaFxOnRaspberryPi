@@ -1,4 +1,4 @@
-logs/*
-target/*
+/logs/
+/target/
 /.idea/
-/javafx-dashboard.iml
+*.iml

@@ -16,12 +16,12 @@ import org.apache.logging.log4j.Logger;
  */
 public class DistanceSensorMeasurement implements Runnable {
 
-    private static Logger logger = LogManager.getLogger(DistanceSensorMeasurement.class);
+    private static final Logger logger = LogManager.getLogger(DistanceSensorMeasurement.class);
 
     /**
      * Data series containing the distance measurements.
      */
-    private final XYChart.Series<String, Number> data;
+    private final XYChart.Series<String, Number> data = new XYChart.Series<>();
 
     /**
      * The GPIO's connected to the distance sensor.
@@ -33,9 +33,11 @@ public class DistanceSensorMeasurement implements Runnable {
      * Constructor
      */
     public DistanceSensorMeasurement(GpioPinDigitalOutput trigger, GpioPinDigitalInput echo) {
+        if (trigger == null || echo == null) {
+            throw new IllegalArgumentException("Distance sensor pins not initialized");
+        }
         this.trigger = trigger;
         this.echo = echo;
-        this.data = new XYChart.Series();
         this.data.setName("Distance");
     }
 
@@ -44,11 +46,6 @@ public class DistanceSensorMeasurement implements Runnable {
      */
     @Override
     public void run() {
-        if (this.trigger == null || this.echo == null) {
-            logger.warn("Distance sensor pins not initialized");
-            return;
-        }
-
         // Set trigger high for 0.01ms
         this.trigger.pulse(10, PinState.HIGH, true, TimeUnit.NANOSECONDS);
 
@@ -60,7 +57,7 @@ public class DistanceSensorMeasurement implements Runnable {
 
         // Wait till measurement is finished
         while (this.echo.isHigh()) {
-            // Wait until the echo pin is low, indicating the ultrasound was received back
+            // Wait until the echo pin is low,  indicating the ultrasound was received back
         }
         long end = System.nanoTime();
 
@@ -70,7 +67,7 @@ public class DistanceSensorMeasurement implements Runnable {
                 Calculation.getDistance(measuredSeconds, true), measuredSeconds);
 
         var timeStamp = new SimpleDateFormat("HH.mm.ss").format(new Date());
-        this.data.getData().add(new XYChart.Data(timeStamp, Calculation.getDistance(measuredSeconds, true)));
+        this.data.getData().add(new XYChart.Data<>(timeStamp, Calculation.getDistance(measuredSeconds, true)));
     }
 
     /**
