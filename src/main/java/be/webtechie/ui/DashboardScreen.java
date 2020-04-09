@@ -3,7 +3,6 @@ package be.webtechie.ui;
 import be.webtechie.gpio.GpioHelper;
 import eu.hansolo.tilesfx.Tile.SkinType;
 import eu.hansolo.tilesfx.TileBuilder;
-import java.lang.reflect.Method;
 import java.util.Locale;
 import javafx.application.Platform;
 import javafx.geometry.Pos;

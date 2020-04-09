@@ -2,8 +2,6 @@ package be.webtechie;
 
 import be.webtechie.gpio.GpioHelper;
 import be.webtechie.ui.DashboardScreen;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
