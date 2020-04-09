@@ -5,6 +5,8 @@ package be.webtechie.util;
  */
 public class Calculation {
 
+    private Calculation() {}
+
     /**
      * Get the distance (in cm) for a given duration.
      * The calculation is based on the speed of sound which is 34300 cm/s.
