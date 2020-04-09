@@ -22,7 +22,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class GpioHelper {
 
-    private static Logger logger = LogManager.getLogger(GpioHelper.class);
+    private static final Logger logger = LogManager.getLogger(GpioHelper.class);
 
     /**
      * The pins we are using in our example.
@@ -41,9 +41,6 @@ public class GpioHelper {
      * The Pi4J GPIO input and outputs.
      */
     private GpioPinDigitalOutput led = null;
-    private GpioPinDigitalInput button = null;
-    private GpioPinDigitalOutput trigger = null;
-    private GpioPinDigitalInput echo = null;
 
     /**
      * The GPIO handlers.
@@ -64,18 +61,19 @@ public class GpioHelper {
             this.led.setShutdownOptions(true, PinState.LOW);
 
             // Initialize the input pin with pull down resistor
-            this.button = gpio.provisionDigitalInputPin(PIN_BUTTON, "Button", PinPullResistance.PULL_DOWN);
+            GpioPinDigitalInput button = gpio
+                    .provisionDigitalInputPin(PIN_BUTTON, "Button", PinPullResistance.PULL_DOWN);
 
             // Initialize the pins for the distance sensor and start thread
-            this.trigger = gpio.provisionDigitalOutputPin(PIN_TRIGGER, "Trigger", PinState.LOW);
-            this.echo = gpio.provisionDigitalInputPin(PIN_ECHO, "Echo", PinPullResistance.PULL_UP);
-            this.distanceSensorMeasurement = new DistanceSensorMeasurement(this.trigger, this.echo);
+            GpioPinDigitalOutput trigger = gpio.provisionDigitalOutputPin(PIN_TRIGGER, "Trigger", PinState.LOW);
+            GpioPinDigitalInput echo = gpio.provisionDigitalInputPin(PIN_ECHO, "Echo", PinPullResistance.PULL_UP);
+            this.distanceSensorMeasurement = new DistanceSensorMeasurement(trigger, echo);
             ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
             executorService.scheduleAtFixedRate(this.distanceSensorMeasurement, 1, 1, TimeUnit.SECONDS);
 
             // Attach an event listener
             this.buttonChangeEventListener = new ButtonChangeEventListener();
-            this.button.addListener(this.buttonChangeEventListener);
+            button.addListener(this.buttonChangeEventListener);
         } catch (UnsatisfiedLinkError | IllegalArgumentException ex) {
             logger.error("Problem with Pi4J! Probably running on non-Pi-device or Pi4J not installed");
         }

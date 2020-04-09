@@ -16,12 +16,12 @@ import org.apache.logging.log4j.Logger;
  */
 public class DistanceSensorMeasurement implements Runnable {
 
-    private static Logger logger = LogManager.getLogger(DistanceSensorMeasurement.class);
+    private static final Logger logger = LogManager.getLogger(DistanceSensorMeasurement.class);
 
     /**
      * Data series containing the distance measurements.
      */
-    private final XYChart.Series<String, Number> data;
+    private final XYChart.Series<String, Number> data = new XYChart.Series<>();
 
     /**
      * The GPIO's connected to the distance sensor.
@@ -35,7 +35,6 @@ public class DistanceSensorMeasurement implements Runnable {
     public DistanceSensorMeasurement(GpioPinDigitalOutput trigger, GpioPinDigitalInput echo) {
         this.trigger = trigger;
         this.echo = echo;
-        this.data = new XYChart.Series();
         this.data.setName("Distance");
     }
 
@@ -70,7 +69,7 @@ public class DistanceSensorMeasurement implements Runnable {
                 Calculation.getDistance(measuredSeconds, true), measuredSeconds);
 
         var timeStamp = new SimpleDateFormat("HH.mm.ss").format(new Date());
-        this.data.getData().add(new XYChart.Data(timeStamp, Calculation.getDistance(measuredSeconds, true)));
+        this.data.getData().add(new XYChart.Data<>(timeStamp, Calculation.getDistance(measuredSeconds, true)));
     }
 
     /**

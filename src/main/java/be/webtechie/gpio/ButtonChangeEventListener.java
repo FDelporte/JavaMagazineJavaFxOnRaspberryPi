@@ -13,18 +13,17 @@ import org.apache.logging.log4j.Logger;
  */
 public class ButtonChangeEventListener implements GpioPinListenerDigital {
 
-    private static Logger logger = LogManager.getLogger(ButtonChangeEventListener.class);
+    private static final Logger logger = LogManager.getLogger(ButtonChangeEventListener.class);
 
     /**
      * Data series containing the button state change timestamps.
      */
-    private final XYChart.Series<String, Number> data;
+    private final XYChart.Series<String, Number> data = new XYChart.Series<>();
 
     /**
      * Constructor
      */
     public ButtonChangeEventListener() {
-        this.data = new XYChart.Series();
         this.data.setName("Button pressed");
     }
 
@@ -34,7 +33,7 @@ public class ButtonChangeEventListener implements GpioPinListenerDigital {
     @Override
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
         var timeStamp = new SimpleDateFormat("HH.mm.ss").format(new Date());
-        this.data.getData().add(new XYChart.Data(timeStamp, event.getState().isHigh() ? 1 : 0));
+        this.data.getData().add(new XYChart.Data<>(timeStamp, event.getState().isHigh() ? 1 : 0));
 
         logger.info("Button state changed to {}", event.getState().isHigh() ? "high" : "low");
     }

@@ -4,7 +4,6 @@ import be.webtechie.gpio.GpioHelper;
 import eu.hansolo.tilesfx.Tile.SkinType;
 import eu.hansolo.tilesfx.TileBuilder;
 import java.util.Locale;
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
@@ -99,12 +98,5 @@ public class DashboardScreen extends HBox {
 
         this.getChildren().add(tilesColumn1);
         this.getChildren().add(tilesColumn2);
-    }
-
-    /**
-     * Stop the threads and close the application.
-     */
-    private void endApplication() {
-        Platform.exit();
     }
 }
