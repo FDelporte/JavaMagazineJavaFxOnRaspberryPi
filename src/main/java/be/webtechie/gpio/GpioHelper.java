@@ -75,7 +75,8 @@ public class GpioHelper {
             this.buttonChangeEventListener = new ButtonChangeEventListener();
             button.addListener(this.buttonChangeEventListener);
         } catch (UnsatisfiedLinkError | IllegalArgumentException ex) {
-            logger.error("Problem with Pi4J! Probably running on non-Pi-device or Pi4J not installed");
+            logger.error("Problem with Pi4J! Probably running on non-Pi-device or Pi4J not installed. Error: {}",
+                    ex.getMessage());
         }
     }
 

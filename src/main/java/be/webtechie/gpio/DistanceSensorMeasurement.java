@@ -33,6 +33,9 @@ public class DistanceSensorMeasurement implements Runnable {
      * Constructor
      */
     public DistanceSensorMeasurement(GpioPinDigitalOutput trigger, GpioPinDigitalInput echo) {
+        if (trigger == null || echo == null) {
+            throw new IllegalArgumentException("Distance sensor pins not initialized");
+        }
         this.trigger = trigger;
         this.echo = echo;
         this.data.setName("Distance");
@@ -43,11 +46,6 @@ public class DistanceSensorMeasurement implements Runnable {
      */
     @Override
     public void run() {
-        if (this.trigger == null || this.echo == null) {
-            logger.warn("Distance sensor pins not initialized");
-            return;
-        }
-
         // Set trigger high for 0.01ms
         this.trigger.pulse(10, PinState.HIGH, true, TimeUnit.NANOSECONDS);
 
@@ -59,7 +57,7 @@ public class DistanceSensorMeasurement implements Runnable {
 
         // Wait till measurement is finished
         while (this.echo.isHigh()) {
-            // Wait until the echo pin is low, indicating the ultrasound was received back
+            // Wait until the echo pin is low,  indicating the ultrasound was received back
         }
         long end = System.nanoTime();
 
