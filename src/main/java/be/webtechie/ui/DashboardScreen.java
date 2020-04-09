@@ -16,6 +16,8 @@ public class DashboardScreen extends HBox {
 
     /**
      * Constructor.
+     *
+     * @param gpioHelper {@link GpioHelper}
      */
     @SuppressWarnings("unchecked")
     public DashboardScreen(GpioHelper gpioHelper) {

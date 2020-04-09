@@ -70,7 +70,7 @@ public class DistanceSensorMeasurement implements Runnable {
     }
 
     /**
-     * @return The data
+     * @return The data as {@link XYChart.Series}
      */
     public XYChart.Series<String, Number> getData() {
         return this.data;
@@ -82,6 +82,7 @@ public class DistanceSensorMeasurement implements Runnable {
      * Since the sound is making a round trip, the distance is divided by 2.
      *
      * @param seconds Number of seconds
+     * @return Distance in cm
      */
     private static int getDistance(float seconds) {
         return Math.round(seconds * 34300 / 2);
@@ -93,6 +94,7 @@ public class DistanceSensorMeasurement implements Runnable {
      *
      * @param start Start timestamp in nanoseconds
      * @param end End timestamp in nanoseconds
+     * @return Difference in seconds
      */
     private static float getSecondsDifference(long start, long end) {
         return (end - start) / 1000000000F;
