@@ -1,6 +1,5 @@
 package be.webtechie.gpio;
 
-import be.webtechie.util.Calculation;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
@@ -62,12 +61,12 @@ public class DistanceSensorMeasurement implements Runnable {
         long end = System.nanoTime();
 
         // Output the distance
-        float measuredSeconds = Calculation.getSecondsDifference(start, end);
-        logger.info("Distance is: {}cm for {}s ",
-                Calculation.getDistance(measuredSeconds, true), measuredSeconds);
+        float measuredSeconds = getSecondsDifference(start, end);
+        int distance = getDistance(measuredSeconds);
+        logger.info("Distance is: {}cm for {}s ", distance, measuredSeconds);
 
         var timeStamp = new SimpleDateFormat("HH.mm.ss").format(new Date());
-        this.data.getData().add(new XYChart.Data<>(timeStamp, Calculation.getDistance(measuredSeconds, true)));
+        this.data.getData().add(new XYChart.Data<>(timeStamp, distance));
     }
 
     /**
@@ -75,5 +74,27 @@ public class DistanceSensorMeasurement implements Runnable {
      */
     public XYChart.Series<String, Number> getData() {
         return this.data;
+    }
+
+    /**
+     * Get the distance (in cm) for a given duration.
+     * The calculation is based on the speed of sound which is 34300 cm/s.
+     * Since the sound is making a round trip, the distance is divided by 2.
+     *
+     * @param seconds Number of seconds
+     */
+    private static int getDistance(float seconds) {
+        return Math.round(seconds * 34300 / 2);
+    }
+
+    /**
+     * Get the number of seconds between two nanosecond timestamps.
+     * 1 second = 1000000000 nanoseconds
+     *
+     * @param start Start timestamp in nanoseconds
+     * @param end End timestamp in nanoseconds
+     */
+    private static float getSecondsDifference(long start, long end) {
+        return (end - start) / 1000000000F;
     }
 }
