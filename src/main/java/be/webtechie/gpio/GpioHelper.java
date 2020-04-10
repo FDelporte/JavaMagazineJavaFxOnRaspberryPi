@@ -81,7 +81,7 @@ public class GpioHelper {
     }
 
     /**
-     * Change the state of the LED.
+     * Set the state of the LED.
      *
      * @param on Flag true if the LED must be switched on
      */

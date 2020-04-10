@@ -39,7 +39,7 @@ public class ButtonChangeEventListener implements GpioPinListenerDigital {
     }
 
     /**
-     * @return The data
+     * @return The data as {@link XYChart.Series}
      */
     public XYChart.Series<String, Number> getData() {
         return this.data;
