@@ -1,5 +1,6 @@
 package be.webtechie;
 
+import be.webtechie.util.CleanExit;
 import be.webtechie.gpio.GpioHelper;
 import be.webtechie.ui.DashboardScreen;
 import javafx.application.Application;
@@ -26,11 +27,7 @@ public class DashboardApp extends Application {
         stage.show();
 
         // Make sure the application quits completely on close
-        stage.setOnCloseRequest(t -> this.finish());
-    }
-
-    public void finish() {
-        this.gpioHelper.disconnectAndExit();
+        stage.setOnCloseRequest(t -> CleanExit.doExit(this.gpioHelper.getGpioController()));
     }
 
     public static void main(String[] args) {

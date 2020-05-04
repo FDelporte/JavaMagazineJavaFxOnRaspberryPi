@@ -11,7 +11,6 @@ import com.pi4j.io.gpio.RaspiPin;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javafx.application.Platform;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +34,7 @@ public class GpioHelper {
     /**
      * The connected hardware components.
      */
-    private GpioController gpio;
+    private GpioController gpioController;
 
     /**
      * The Pi4J GPIO input and outputs.
@@ -54,19 +53,19 @@ public class GpioHelper {
     public GpioHelper() {
         try {
             // Initialize the GPIO controller
-            this.gpio = GpioFactory.getInstance();
+            this.gpioController = GpioFactory.getInstance();
 
             // Initialize the led pin as a digital output pin with initial low state
-            this.led = gpio.provisionDigitalOutputPin(PIN_LED, "RED", PinState.LOW);
+            this.led = gpioController.provisionDigitalOutputPin(PIN_LED, "RED", PinState.LOW);
             this.led.setShutdownOptions(true, PinState.LOW);
 
             // Initialize the input pin with pull down resistor
-            GpioPinDigitalInput button = gpio
+            GpioPinDigitalInput button = gpioController
                     .provisionDigitalInputPin(PIN_BUTTON, "Button", PinPullResistance.PULL_DOWN);
 
             // Initialize the pins for the distance sensor and start thread
-            GpioPinDigitalOutput trigger = gpio.provisionDigitalOutputPin(PIN_TRIGGER, "Trigger", PinState.LOW);
-            GpioPinDigitalInput echo = gpio.provisionDigitalInputPin(PIN_ECHO, "Echo", PinPullResistance.PULL_UP);
+            GpioPinDigitalOutput trigger = gpioController.provisionDigitalOutputPin(PIN_TRIGGER, "Trigger", PinState.LOW);
+            GpioPinDigitalInput echo = gpioController.provisionDigitalInputPin(PIN_ECHO, "Echo", PinPullResistance.PULL_UP);
             this.distanceSensorMeasurement = new DistanceSensorMeasurement(trigger, echo);
             ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
             executorService.scheduleAtFixedRate(this.distanceSensorMeasurement, 1, 1, TimeUnit.SECONDS);
@@ -78,6 +77,10 @@ public class GpioHelper {
             logger.error("Problem with Pi4J! Probably running on non-Pi-device or Pi4J not installed. Error: {}",
                     ex.getMessage());
         }
+    }
+
+    public GpioController getGpioController() {
+        return this.gpioController;
     }
 
     /**
@@ -119,14 +122,5 @@ public class GpioHelper {
         } else {
             return new Series<>();
         }
-    }
-
-    /**
-     * Disconnect the Pi4J GPIO controller.
-     */
-    public void disconnectAndExit() {
-        this.gpio.shutdown();
-        Platform.exit();
-        System.exit(0);
     }
 }

@@ -1,5 +1,6 @@
 package be.webtechie.ui;
 
+import be.webtechie.util.CleanExit;
 import be.webtechie.gpio.GpioHelper;
 import eu.hansolo.tilesfx.Tile.SkinType;
 import eu.hansolo.tilesfx.TileBuilder;
@@ -62,7 +63,7 @@ public class DashboardScreen extends HBox {
 
         // Tile with an exit button to end the application
         var exitButton = new Button("Exit");
-        exitButton.setOnAction(e -> gpioHelper.disconnectAndExit());
+        exitButton.setOnAction(e -> CleanExit.doExit(gpioHelper.getGpioController()));
 
         var exitTile = TileBuilder.create()
                 .skinType(SkinType.CUSTOM)
